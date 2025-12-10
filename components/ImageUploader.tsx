@@ -135,13 +135,13 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ currentImage, onImageSele
   }, []);
 
   return (
-    <div className="h-full flex flex-col p-4">
-      <div className="mb-4">
-        <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+    <div className="h-full flex flex-col p-2 md:p-4">
+      <div className="mb-2 md:mb-4 flex-shrink-0">
+        <h2 className="text-lg md:text-xl font-bold text-slate-800 flex items-center gap-2">
           <ImageIcon className="w-5 h-5 text-indigo-600" />
           Problem Source
         </h2>
-        <p className="text-sm text-slate-500">Upload an image of your math problem, graph, or homework.</p>
+        <p className="text-xs md:text-sm text-slate-500">Upload an image of your math problem.</p>
       </div>
 
       <div
@@ -165,10 +165,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ currentImage, onImageSele
             <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4 z-10">
                <button 
                  onClick={capturePhoto}
-                 className="w-14 h-14 bg-white rounded-full border-4 border-indigo-200 flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+                 className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-full border-4 border-indigo-200 flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
                  title="Capture Photo"
                >
-                 <div className="w-10 h-10 bg-indigo-600 rounded-full"></div>
+                 <div className="w-8 h-8 md:w-10 md:h-10 bg-indigo-600 rounded-full"></div>
                </button>
                <button 
                  onClick={stopCamera}
@@ -180,7 +180,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ currentImage, onImageSele
             </div>
           </div>
         ) : currentImage ? (
-          <div className="relative w-full h-full flex items-center justify-center p-4">
+          <div className="relative w-full h-full flex items-center justify-center p-2 md:p-4">
             <img
               src={currentImage.previewUrl}
               alt="Uploaded problem"
@@ -193,27 +193,27 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ currentImage, onImageSele
             >
               <X className="w-5 h-5" />
             </button>
-            <div className="absolute bottom-4 left-0 right-0 text-center">
-                 <span className="inline-block px-3 py-1 bg-white/90 rounded-full text-xs font-medium text-slate-600 shadow-sm">
+            <div className="absolute bottom-2 md:bottom-4 left-0 right-0 text-center pointer-events-none">
+                 <span className="inline-block px-3 py-1 bg-white/90 rounded-full text-[10px] md:text-xs font-medium text-slate-600 shadow-sm backdrop-blur-sm">
                     Image ready for analysis
                  </span>
             </div>
           </div>
         ) : (
-          <div className="text-center p-6 w-full max-w-sm">
-            <div className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${isDragging ? 'bg-indigo-100 text-indigo-600' : 'bg-slate-100 text-slate-400'}`}>
-              <Upload className="w-8 h-8" />
+          <div className="text-center p-4 w-full max-w-sm">
+            <div className={`w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 rounded-full flex items-center justify-center ${isDragging ? 'bg-indigo-100 text-indigo-600' : 'bg-slate-100 text-slate-400'}`}>
+              <Upload className="w-6 h-6 md:w-8 md:h-8" />
             </div>
-            <p className="text-slate-700 font-medium mb-1">
-              Drag & drop your image here
+            <p className="text-slate-700 font-medium mb-1 text-sm md:text-base">
+              Drag & drop your image
             </p>
-            <p className="text-slate-500 text-sm mb-6">
+            <p className="text-slate-500 text-xs md:text-sm mb-4 md:mb-6">
               or use one of the options below
             </p>
             
-            <div className="flex gap-3 justify-center">
+            <div className="flex gap-2 md:gap-3 justify-center">
               <label className="inline-flex cursor-pointer">
-                <span className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
+                <span className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-indigo-600 text-white text-xs md:text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-colors shadow-sm whitespace-nowrap">
                   Select File
                 </span>
                 <input
@@ -226,7 +226,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ currentImage, onImageSele
               
               <button
                 onClick={startCamera}
-                className="flex items-center gap-2 px-4 py-2 bg-white text-slate-700 border border-slate-300 text-sm font-semibold rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
+                className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-white text-slate-700 border border-slate-300 text-xs md:text-sm font-semibold rounded-lg hover:bg-slate-50 transition-colors shadow-sm whitespace-nowrap"
               >
                 <Camera className="w-4 h-4" />
                 Camera
@@ -234,7 +234,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ currentImage, onImageSele
             </div>
             
             {error && (
-              <p className="mt-4 text-sm text-red-500 bg-red-50 px-3 py-1 rounded-md inline-block border border-red-100">
+              <p className="mt-2 md:mt-4 text-xs text-red-500 bg-red-50 px-2 py-1 rounded-md inline-block border border-red-100">
                 {error}
               </p>
             )}
