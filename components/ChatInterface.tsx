@@ -20,13 +20,20 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ uploadedImage, onClearBoa
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Use a ref for the container instead of an element at the end
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   
   // Ref to track the processed image to prevent double-sends or loops
   const prevImageRef = useRef<string | null>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   };
 
   useEffect(() => {
@@ -149,7 +156,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ uploadedImage, onClearBoa
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
+      <div 
+        ref={chatContainerRef}
+        className="flex-1 overflow-y-auto p-4 space-y-6 scroll-smooth"
+      >
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -191,7 +201,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ uploadedImage, onClearBoa
              </div>
           </div>
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area */}
