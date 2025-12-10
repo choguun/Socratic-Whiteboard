@@ -1,5 +1,7 @@
 {
   "name": "Socratic Whiteboard",
   "description": "An AI-powered tutor that uses the Socratic method to guide students through problems using text and image analysis. Upload your homework and get guided help, not just answers.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [
+    "camera"
+  ]
 }
