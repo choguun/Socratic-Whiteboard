@@ -6,19 +6,23 @@ import { Message, Role } from "../types";
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const SYSTEM_INSTRUCTION = `
-You are a Socratic Tutor acting as a "Whiteboard Companion". 
-Your goal is to help the user learn by guiding them, NOT by giving them the answer directly.
+You are "The Socratic Whiteboard", an expert AI tutor.
+Your goal is to GUIDE the student, NEVER to give the answer immediately.
 
-Rules:
-1. **Never** solve the problem for the user immediately.
-2. If the user uploads an image (math problem, chemistry diagram, physics sketch, essay snippet), analyze it carefully. Identify where they might be stuck or what the next logical step is.
-3. Ask a leading question to nudge them in the right direction. 
-4. Be encouraging, patient, and concise. Avoid long lectures.
-5. Use LaTeX formatting for all mathematical expressions. Enclose inline math in single dollar signs ($...$) and block math in double dollar signs ($$...$$).
-6. If the image is messy or illegible, politely ask for a clearer photo.
-7. If the user is just saying hello, be friendly but remind them you are here to help them solve problems.
+### BEHAVIORAL RULES (THE TUTOR LOGIC)
+1. **Analyze First**: When an image is uploaded (math, chemistry, physics, etc.), analyze it carefully. Identify the specific mistake or the next logical step.
+2. **Socratic Method**: Ask a leading question to help the user realize the solution themselves. Do not just solve it.
+3. **Multimodal**: You can read messy handwriting and diagrams. If it's truly illegible, politely ask for a clearer photo.
+4. **Tone**: Encouraging, patient, concise, and curious. No long lectures.
+5. **Formatting**:
+   - Use LaTeX for ALL math equations.
+   - Inline math: $ E = mc^2 $ (wrapped in single dollar signs).
+   - Block math: $$ x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$ (wrapped in double dollar signs).
 
-Tone: Academic but approachable. Like a kind professor during office hours.
+### INTERACTION GUIDE
+- If the user asks "What is the answer?", respond with: "Let's break it down. What do you think the first step is?"
+- If the user uploads a blank problem, ask them how they would start.
+- If the user uploads a partial attempt, find the first error and ask a question about it.
 `;
 
 export const sendMessageToGemini = async (
@@ -31,26 +35,18 @@ export const sendMessageToGemini = async (
     const model = 'gemini-2.5-flash';
 
     // Construct the chat history for context
-    // We only send the text history here for context window efficiency, 
-    // unless the image is part of the *current* turn.
-    // In a production app, you might want to manage history more robustly with the Chat API,
-    // but for this stateless request model, we construct the prompt manually or use a fresh chat session.
-    
-    // Using `ai.chats.create` is better for maintaining conversation history state automatically
-    // provided we can inject the system instruction.
-    
-    // However, since we might inject an image at any point (stateless injection for the current turn),
-    // we will construct the contents array manually to include history + current payload.
-
-    const contents = history.map(msg => ({
-      role: msg.role,
-      parts: [{ text: msg.text }]
-    }));
+    const contents = history
+      .filter(msg => msg.id !== 'welcome') // Skip local welcome message
+      .map(msg => ({
+        role: msg.role,
+        parts: [{ text: msg.text }]
+      }));
 
     // Prepare current user message parts
     const currentParts: any[] = [{ text: newMessage }];
 
-    // If there is an image attached to this specific turn
+    // If there is an active image on the whiteboard, we include it in the context
+    // This allows the model to "see" the board for every question while the image is present.
     if (imageBase64 && mimeType) {
       currentParts.unshift({
         inlineData: {
@@ -70,7 +66,7 @@ export const sendMessageToGemini = async (
       contents: contents,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.7, // Balanced creativity for teaching
+        temperature: 0.7, // Balanced for tutoring
       }
     });
 

@@ -9,10 +9,10 @@ interface MarkdownRendererProps {
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
   return (
-    <div className="prose prose-slate max-w-none prose-p:leading-relaxed prose-pre:bg-slate-100 prose-pre:text-slate-800">
+    <div className="prose prose-slate max-w-none prose-p:leading-relaxed prose-pre:bg-white prose-pre:border prose-pre:border-slate-200 prose-pre:text-slate-800 break-words">
       <ReactMarkdown
         remarkPlugins={[remarkMath]}
-        rehypePlugins={[rehypeKatex]}
+        rehypePlugins={[[rehypeKatex, { strict: false }]]}
         components={{
           // Override paragraph to handle block math spacing nicely if needed
           p: ({ node, children }) => <p className="mb-2 last:mb-0">{children}</p>,
@@ -20,11 +20,11 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
           code: ({ node, className, children, ...props }) => {
             const match = /language-(\w+)/.exec(className || '');
             return match ? (
-              <code className={`${className} bg-slate-100 rounded px-1 py-0.5 text-sm font-mono`} {...props}>
+              <code className={`${className} bg-white rounded px-1 py-0.5 text-sm font-mono`} {...props}>
                 {children}
               </code>
             ) : (
-              <code className="bg-slate-100 rounded px-1 py-0.5 text-sm font-mono text-pink-600" {...props}>
+              <code className="bg-white border border-slate-200 rounded px-1 py-0.5 text-sm font-mono text-pink-600" {...props}>
                 {children}
               </code>
             );

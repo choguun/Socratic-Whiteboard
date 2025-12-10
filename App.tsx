@@ -33,7 +33,10 @@ function App() {
 
         {/* Right Panel: Chat */}
         <section className="w-full md:w-[55%] lg:w-[60%] h-[60vh] md:h-full">
-          <ChatInterface uploadedImage={currentImage} />
+          <ChatInterface 
+            uploadedImage={currentImage} 
+            onClearBoard={() => setCurrentImage(null)}
+          />
         </section>
 
       </main>
