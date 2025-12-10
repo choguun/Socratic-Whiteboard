@@ -11,7 +11,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ currentImage, onImageSele
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const processFile = (file: File) => {
+  const processFile = useCallback((file: File) => {
     setError(null);
     if (!file.type.startsWith('image/')) {
       setError('Please upload an image file (JPEG, PNG, WEBP).');
@@ -40,7 +40,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ currentImage, onImageSele
       setError('Failed to read file.');
     };
     reader.readAsDataURL(file);
-  };
+  }, [onImageSelect]);
 
   const onDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -58,7 +58,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ currentImage, onImageSele
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       processFile(e.dataTransfer.files[0]);
     }
-  }, []);
+  }, [processFile]);
 
   const onFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
